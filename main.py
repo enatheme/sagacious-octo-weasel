@@ -73,3 +73,5 @@ def main():
 
 	#display the result
 	display(h_ret, cpp_ret)
+
+main()
