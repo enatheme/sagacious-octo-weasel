@@ -43,7 +43,6 @@ def analyse():
 		input_list.append([ttype, tname])
 	return(input_list)
 	
-keyword = {"unsigned", "int", "char", "string", "std::string", "bool", "long", "float", "double"}
 
 def intro():
 	ret = raw_input("Do you want to add the name of the class for cpp function?\n")
@@ -51,18 +50,26 @@ def intro():
 		ret += "::"
 	return(ret)
 
-h_ret = ""
-cpp_ret = ""
+def main():
+	#initialize variables
+	h_ret = ""
+	cpp_ret = ""
 
-#llist = [["int", "a"], ["char", "b"]]
-cname = intro()
-llist = analyse()
-ret = gen_get(llist, cname)
-h_ret += ret[0]
-cpp_ret += ret[1]
+	#grab the class name
+	cname = intro()
+	
+	#grab variables
+	llist = analyse()
+	
+	#generate the getter
+	ret = gen_get(llist, cname)
+	h_ret += ret[0]
+	cpp_ret += ret[1]
 
-ret = gen_set(llist, cname)
-h_ret += ret[0]
-cpp_ret += ret[1]
+	#generate the setter
+	ret = gen_set(llist, cname)
+	h_ret += ret[0]
+	cpp_ret += ret[1]
 
-display(h_ret, cpp_ret)
+	#display the result
+	display(h_ret, cpp_ret)
