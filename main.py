@@ -93,7 +93,7 @@ def read_folder():
 
 	
 
-#parsing for C file
+#parsing for Cpp file
 def parsing_cpp_file (input_files, output_src, output_head, type_list):
 	#var
 	re_array = []
@@ -138,19 +138,19 @@ def parsing_cpp_file (input_files, output_src, output_head, type_list):
 		f_output_head.write("class %s\n{\n\tpublic:\n" % (cname))
 		f_output_head.write(gget[0])
 		f_output_head.write(gset[0])
-		f_output_head.write("\tprivate:\n")
+		f_output_head.write("\n\tprivate:\n")
 		for x in input_list:
 			f_output_head.write("\t\t%s;\n" % (" ".join(x)))
 		f_output_head.write("};")
 		
 		#writting source file
-		f_output_src.write("#include \"%s/%s\"\n" % (os.path.relpath(output_head, output_src), head_file_name))
+		f_output_src.write("#include \"%s/%s\"\n\n" % (os.path.relpath(output_head, output_src), head_file_name))
 		f_output_src.write(gget[1])
 		f_output_src.write(gset[1])
 	
 
 def remove_newline(input_line):
-	if (input_line[len(input_line) - 1:] == ('\n')):
+	if ((input_line[len(input_line) - 1:] == ('\n')) | (input_line[len(input_line) - 1:] == ('\r'))):
 		return(input_line[:-1])
 	return(input_line)
 
@@ -172,7 +172,7 @@ def main():
 	#initialize variables
 	type_list = ["char", "char16_t", "char32_t", "wchar_t", "signed char", "signed short int", "signed int", "signed long int", "signed long long int", 
 	"unsigned char", "unsigned short int", "unsigned int", "unsigned long", "unsigned long int", "unsigned long long int", "float", "double", "long double", "bool", "void", 
-	"int", "long", "short"]	
+	"int", "long", "short", "string", "std::string"]	
 	
 	parsing_cpp_file (folders[0], folders[1], folders[2], type_list)
 	
