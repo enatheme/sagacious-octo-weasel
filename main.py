@@ -54,6 +54,7 @@ def read_folder():
 			files[f] = remove_newline(files[f])
 				
 		#we check for extension
+		checked_files = []
 		for f in files:
 			for reg in re_array:
 				if(reg.match(f)):
