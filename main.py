@@ -1,5 +1,39 @@
 import os, sys, re
 
+#remove \n char
+def remove_newline(input_line):
+	if ((input_line[len(input_line) - 1:] == ('\n')) | (input_line[len(input_line) - 1:] == ('\r'))):
+		return(input_line[:-1])
+	return(input_line)
+
+#remove / in last char for a path
+def add_final_slash(input_line):
+	if (input_line[len(input_line) - 1:] == ('/')):
+		return(input_line)
+	return(input_line + '/')
+
+#remove the ; at the end of an instruction (c, c++)
+def remove_final_semicolon(input_line):
+	if (input_line[len(input_line) - 1:] == (';')):
+		return(input_line[: -1])
+	return(input_line)	
+	
+
+#display information and ask if it is right
+def check_information(checked_files, src_folder, head_folder):
+	print("Files to check:")
+	#if there is a lot of checked_files
+	if(len(checked_files) > 10):
+		if(input("%d files found, do you want to display all? Y/n\n") == 'Y'):
+			for f in checked_files:
+				print("\t- %s" % (f))
+	else:
+		for f in checked_files:
+			print("\t- %s" % (f))
+	print("\nFolder to copy source files: %s" % (src_folder))
+	print("\nFolder to copy header files: %s" % (head_folder))
+	return(input("\nIs this information correct ? Y/n\n"))
+
 
 #split a path name and return only the file name
 def get_proper_file_name(input_name):
@@ -39,11 +73,8 @@ def read_folder():
 	head_folder = ""
 	
 	#add here your extension
-	while((x != 'y') & (x != 'Y')):
-		extension = input("Enter your extensions (only cpp) supported at this moment\n").split(' ')
-		x = input("Is '%s' is correct ? Y/n\n" % (', '.join(extension)))
-	x = 'n'
-		
+	extension = input("Enter your extensions (only cpp) supported at this moment\n").split(' ')
+
 	#re
 	for tmp in extension:
 		if(tmp[0] != '.'):
@@ -68,38 +99,26 @@ def read_folder():
 				if(reg.match(f)):
 					checked_files.append(f)
 					break
-		
-		#if too much to display		
-		if(len(checked_files) > 10):
-			x = input("There is more than 10 files detected (%s) in , do you want to display it? Y/n\n" % (len(checked_files)))
-			if((x == 'y') | (x == 'Y')):
-				x = input("Files detected '%s'. Is that correct ? Y/n\n" % (', '.join(checked_files)))
-			else:
-				x = input("Validate the folder %s? Y/n\n" % (folder))
-		else:
-			x = input("Files detected '%s'. Is that correct ? Y/n\n" % (', '.join(checked_files)))
-			
+					
 		#we add the path to the name file!
 		for i in range (0, len(checked_files)):
 			checked_files[i] = folder + '/' + checked_files[i]
-	x = 'n'
 	
-	#source path folder
-	while((x != 'y') & (x != 'Y')):
+		#source path folder
 		src_folder = input("Enter your output source folder\n")
-		x = input("Is '%s' is correct ? Y/n\n" % (src_folder))
-		if((os.path.isdir(src_folder) != 1)):
+		while(os.path.isdir(src_folder) != 1):
 			print("%s is not a valid folder!" % (src_folder))
-			x = 'n'
-	x = 'n'
-		
-	while((x != 'y') & (x != 'Y')):
+			src_folder = input("Enter your output source folder\n")
+	
 		head_folder = input("Enter your output header folder\n")
-		x = input("Is '%s' is correct ? Y/n\n" % (head_folder))
-		if((os.path.isdir(head_folder) != 1)):
+		while(os.path.isdir(head_folder) != 1):
 			print("%s is not a valid folder!" % (head_folder))
-			x = 'n'
-	x = 'n'
+			head_folder = input("Enter your output header folder\n")
+		
+
+		x = check_information(checked_files, add_final_slash(src_folder), add_final_slash(head_folder))
+	
+	
 	
 	return([checked_files, add_final_slash(src_folder), add_final_slash(head_folder)])
 
@@ -167,21 +186,6 @@ def parsing_cpp_file (input_files, output_src, output_head, type_list):
 		f_output_src.write(gset[1])
 	
 
-def remove_newline(input_line):
-	if ((input_line[len(input_line) - 1:] == ('\n')) | (input_line[len(input_line) - 1:] == ('\r'))):
-		return(input_line[:-1])
-	return(input_line)
-
-def add_final_slash(input_line):
-	if (input_line[len(input_line) - 1:] == ('/')):
-		return(input_line)
-	return(input_line + '/')
-	
-def remove_final_semicolon(input_line):
-	if (input_line[len(input_line) - 1:] == (';')):
-		return(input_line[: -1])
-	return(input_line)	
-	
 	
 	
 def main():
