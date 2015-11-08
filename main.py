@@ -1,5 +1,6 @@
 import os, sys, re
 
+#geter generation
 def gen_get(input_list, cname):
 	h_ret = ""
 	cpp_ret = ""
@@ -10,6 +11,7 @@ def gen_get(input_list, cname):
 		cpp_ret += "%s %s::get_%s(void){return(this.%s);}\n" % (vtype, cname, vname, vname)
 	return([h_ret, cpp_ret])
 
+#seter generation
 def gen_set(input_list, cname):
 	h_ret = ""
 	cpp_ret = ""
@@ -32,8 +34,8 @@ def read_folder():
 	
 	#add here your extension
 	while((x != 'y') & (x != 'Y')):
-		extension = raw_input("Enter your extensions (only cpp) supported at this moment\n").split(' ')
-		x = raw_input("Is '%s' is correct ? Y/n\n" % (', '.join(extension)))
+		extension = input("Enter your extensions (only cpp) supported at this moment\n").split(' ')
+		x = input("Is '%s' is correct ? Y/n\n" % (', '.join(extension)))
 	x = 'n'
 		
 	#re
@@ -46,7 +48,7 @@ def read_folder():
 	
 	#we read the folder and catch files
 	while((x != 'y') & (x != 'Y')):
-		folder = raw_input("Path to the folder to scan\n%s" % (os.popen("pwd").readlines()[0]))
+		folder = input("Path to the folder to scan\n%s" % (os.popen("pwd").readlines()[0]))
 		files = os.popen("ls " + folder).readlines()
 		
 		#we remove the '\n' at the end
@@ -62,27 +64,27 @@ def read_folder():
 					break
 				
 		if(len(checked_files) > 10):
-			x = raw_input("There is more than 10 files detected (%s) in , do you want to display it? Y/n\n" % (len(checked_files)))
+			x = input("There is more than 10 files detected (%s) in , do you want to display it? Y/n\n" % (len(checked_files)))
 			if((x == 'y') | (x == 'Y')):
-				x = raw_input("Files detected '%s'. Is that correct ? Y/n\n" % (', '.join(checked_files)))
+				x = input("Files detected '%s'. Is that correct ? Y/n\n" % (', '.join(checked_files)))
 			else:
-				x = raw_input("Validate the folder %s? Y/n\n" % (folder))
+				x = input("Validate the folder %s? Y/n\n" % (folder))
 		else:
-			x = raw_input("Files detected '%s'. Is that correct ? Y/n\n" % (', '.join(checked_files)))
+			x = input("Files detected '%s'. Is that correct ? Y/n\n" % (', '.join(checked_files)))
 	x = 'n'
 	
 	#source path folder
 	while((x != 'y') & (x != 'Y')):
-		src_folder = raw_input("Enter your output source folder\n")
-		x = raw_input("Is '%s' is correct ? Y/n\n" % (src_folder))
+		src_folder = input("Enter your output source folder\n")
+		x = input("Is '%s' is correct ? Y/n\n" % (src_folder))
 		if((os.path.isdir(src_folder) != 1)):
 			print("%s is not a valid folder!" % (src_folder))
 			x = 'n'
 	x = 'n'
 		
 	while((x != 'y') & (x != 'Y')):
-		head_folder = raw_input("Enter your output header folder\n")
-		x = raw_input("Is '%s' is correct ? Y/n\n" % (head_folder))
+		head_folder = input("Enter your output header folder\n")
+		x = input("Is '%s' is correct ? Y/n\n" % (head_folder))
 		if((os.path.isdir(head_folder) != 1)):
 			print("%s is not a valid folder!" % (head_folder))
 			x = 'n'
