@@ -1,5 +1,10 @@
 import os, sys, re
 
+#split a path name and return only the file name
+def get_proper_file_name(input_name):
+	ret = input_name.split('/')
+	return(ret[len(ret) - 1])
+
 #geter generation
 def gen_get(input_list, cname):
 	h_ret = ""
@@ -62,7 +67,8 @@ def read_folder():
 				if(reg.match(f)):
 					checked_files.append(f)
 					break
-				
+		
+		#if too much to display		
 		if(len(checked_files) > 10):
 			x = input("There is more than 10 files detected (%s) in , do you want to display it? Y/n\n" % (len(checked_files)))
 			if((x == 'y') | (x == 'Y')):
@@ -71,6 +77,10 @@ def read_folder():
 				x = input("Validate the folder %s? Y/n\n" % (folder))
 		else:
 			x = input("Files detected '%s'. Is that correct ? Y/n\n" % (', '.join(checked_files)))
+			
+		#we add the path to the name file!
+		for i in range (0, len(checked_files)):
+			checked_files[i] = folder + '/' + checked_files[i]
 	x = 'n'
 	
 	#source path folder
@@ -89,6 +99,8 @@ def read_folder():
 			print("%s is not a valid folder!" % (head_folder))
 			x = 'n'
 	x = 'n'
+	
+	print([checked_files, add_final_slash(src_folder), add_final_slash(head_folder)])
 		
 	
 	return([checked_files, add_final_slash(src_folder), add_final_slash(head_folder)])
@@ -101,12 +113,15 @@ def parsing_cpp_file (input_files, output_src, output_head, type_list):
 	re_array = []
 	for input_file in input_files:
 		#definition of cname
-		cname = input_file.split('.')[0]
-		head_file_name = input_file.split('.')[0] + ".h"
-		f_input = open(input_file, 'r')
-		f_output_src = open(output_src + input_file, 'w')
-		f_output_head = open(output_head + head_file_name, 'w')
+		proper_name = get_proper_file_name(input_file)
+		cname = proper_name.split('.')[0]
+		head_file_name = cname + ".h"
 		input_list = []
+
+		f_input = open(input_file, 'r')
+		f_output_src = open(output_src + proper_name, 'w')
+		f_output_head = open(output_head + head_file_name, 'w')
+		
 		
 
 		for i in range(len(type_list)):
