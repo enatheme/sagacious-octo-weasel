@@ -1,5 +1,6 @@
 import os, sys, re
 
+
 #split a path name and return only the file name
 def get_proper_file_name(input_name):
 	ret = input_name.split('/')
@@ -100,9 +101,6 @@ def read_folder():
 			x = 'n'
 	x = 'n'
 	
-	print([checked_files, add_final_slash(src_folder), add_final_slash(head_folder)])
-		
-	
 	return([checked_files, add_final_slash(src_folder), add_final_slash(head_folder)])
 
 	
@@ -122,31 +120,34 @@ def parsing_cpp_file (input_files, output_src, output_head, type_list):
 		f_output_src = open(output_src + proper_name, 'w')
 		f_output_head = open(output_head + head_file_name, 'w')
 		
-		
-
 		for i in range(len(type_list)):
 			type_list[i].replace(' ', '\s*')
 		#re
 		for tmp in type_list:
 			re_array.append(re.compile("^\s*%s\s*(.)*\s*;\s*$" % (tmp)))
 		re_include = re.compile("^\s*#include+[(^ )]")
+		empty_line = re.compile("^[\s, \n]*$")
+
 
 		#parsing of the file
 		for line in f_input:
-			#detection of include
-			if (re_include.match(line)):
-				f_output_head.write(line)
+			#if the line is not empty
+			if(not(empty_line.match(line))):
+				#detection of include
+				if (re_include.match(line)):
+					f_output_head.write(line)
 
-			#detection of variable
-			else:
-				for tmp in range(0, len(re_array)):
-					if(re_array[tmp].match(line)):
-						line = remove_newline(line)
-						line = remove_final_semicolon(line)
-						t = line.split(" ")
-						t = filter(None, t)
-						input_list.append([type_list[tmp], remove_newline(t[len(t) - 1])])
-						
+				#detection of variable
+				else:
+					for tmp in range(0, len(re_array)):
+						if(re_array[tmp].match(line)):
+							#we clean the line
+							line = remove_newline(line)
+							line = remove_final_semicolon(line)
+							t = line.split(" ")
+							t = list(filter(None, t))
+							input_list.append([type_list[tmp], remove_newline(t[len(t) - 1])])
+							
 						
 		#generation
 		gget = gen_get(input_list, cname)
